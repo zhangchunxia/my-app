@@ -1,4 +1,7 @@
 import { Button, Card } from 'antd';
+import produce from 'immer';
+import React, { useState } from 'react';
+import { useImmer } from 'use-immer';
 
 import { useAppDisPatch, useAppSelector } from '@/store/hooks';
 import { decreEment, increment, incrementByAmount } from '@/store/slice/counterSlice';
@@ -7,16 +10,42 @@ import { getUserAsync } from '@/store/slice/user';
 import styles from './index.module.less';
 
 const Home = () => {
-  const count = useAppSelector((state) => state.count.value);
-  const userInfo = useAppSelector((state) => state.user);
+  const count = useAppSelector((_it) => _it.count.value);
+  const userInfo = useAppSelector((_) => _.user);
   const dispatch = useAppDisPatch();
-
+  const [num, setNum] = useImmer({ a: 1 });
+  const [num1, setNum1] = useState(1);
   const handleGetdata = () => {
     dispatch(getUserAsync());
   };
 
+  const handleNum = () => {
+    setNum((draft) => {
+      draft.a += 1;
+      console.log(num, draft);
+    });
+    console.log(num);
+  };
+  const handleNum1 = () => {
+    setTimeout(() => {
+      setNum1(2);
+    }, 0);
+    console.log(num1, 0);
+  };
+
   return (
     <div>
+      <Card>
+        <h1>test</h1>
+        <div> num:{num.a}</div>
+        <div> num1:{num1}</div>
+        <Button aria-label="Increment value" onClick={handleNum}>
+          num
+        </Button>
+        <Button aria-label="Increment value" onClick={handleNum1}>
+          setNum
+        </Button>
+      </Card>
       <Card>
         <h1>运用redux</h1>
         <div>
